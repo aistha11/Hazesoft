@@ -44,3 +44,19 @@ BEGIN
     
     SELECT _EMPID AS 'EmpID';
 END
+
+
+// Todo app
+
+CREATE TABLE `todos`(
+	`id` int NOT NULL AUTO_INCREMENT,
+	`user_id` int NOT NULL,
+	`todo` varchar(25) DEFAULT NULL,
+	`description` varchar(255) DEFAULT NULL,
+	`deadline` DATETIME NOT NULL,
+	PRIMARY KEY (`id`)
+);
+
+CREATE TABLE todos(id int NOT NULL AUTO_INCREMENT, user_id int NOT NULL, todo varchar(25) DEFAULT NULL, description varchar(255) DEFAULT NULL, deadline DATETIME NOT NULL,PRIMARY KEY (`id`));
+
+

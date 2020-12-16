@@ -1,7 +1,7 @@
-const express = require("express");
-const uuid = require("uuid");
-const router = express.Router();
-const members = require("../models/Members");
+import { Router } from "express";
+import { v4 } from "uuid";
+const router = Router();
+import members from "../models/Members";
 
 const idFilter = (req) => (member) => member.id === parseInt(req.params.id);
 
@@ -25,7 +25,7 @@ router.get("/:id", (req, res) => {
 router.post("/", (req, res) => {
 
     const newMember = {
-        id : uuid.v4(),
+        id : v4(),
         name : req.body.name,
         email : req.body.email,
         status : 'active', 
@@ -88,4 +88,4 @@ router.delete("/:id", (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

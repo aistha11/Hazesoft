@@ -1,15 +1,20 @@
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import path from 'path';
+import cors from 'cors';
+import { config } from 'dotenv';
+import apiRouter from './api.routes';
+import createError from './utils/createError';
+import logger from './middlewares/logger';
+config();
 
-// import express, { static } from 'express';
-// import { join } from 'path';
 
-const logger = require('./middleware/logger');
 
 const app = express();
 
 // Init middleware
 app.use(logger);
+
+app.use(cors());
 
 // Body Parser Middleware
 app.use(express.json());
@@ -22,6 +27,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname,'public')));
 
 // Routes
+
+app.use('/api', apiRouter);
 
 //Home
 app.get('/',(req,res)=>{
@@ -38,15 +45,24 @@ app.get('/',(req,res)=>{
 
 
 // Members
-app.use('/api/members', require('./routes/members'));
+// app.use('/api/members', require('./routes/members'));
 
 // Employee
-app.use('/api/employees', require('./routes/employees'));
+// app.use('/api/employees', require('./routes/employees'));
 
 
+app.use((req, res, next) => {
+    next(createError(404, 'Page Not Found'));
+  });
+  
+  app.use((error, req, res, next) => {
+    res.status(error.status || 500).json({
+      status: 'Error',
+      message: error.message || 'Internal server error',
+    });
+  });
 
-
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, ()=> {
     console.log(`Server Started on port ${PORT}`)
