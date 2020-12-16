@@ -1,0 +1,46 @@
+use expressmysql;
+
+CREATE TABLE `employee` (
+	`EmpID` int NOT NULL AUTO_INCREMENT,
+    `Name` varchar(20) DEFAULT NULL,
+    `EmpCode` varchar(20) DEFAULT NULL,
+	`Salary` int DEFAULT NULL,
+    PRIMARY KEY (`EmpID`)
+);
+
+Use expressmysql;
+
+LOCK TABLES `employee` WRITE;
+INSERT INTO `employee` VALUES (1, 'Json', 'EMP12', 1200), (2, 'marx', 'EMP14', 2400), (3, 'Phoenix', 'EMP13', 2300), (4, 'Joaquin', 'EMP11', 5500);
+UNLOCK TABLES;
+
+SELECT * FROM expressmysql.employee;
+
+
+
+
+//Creating stored procedures
+
+CREATE PROCEDURE `EmployeeAddOrEdit` (
+	IN _EmpID INT,
+    IN _Name varchar(20),
+    IN _EmpCode varchar(20),
+    IN _Salary INT
+)
+BEGIN
+	IF _EmpID = 0 THEN
+		INSERT INTO employee(Name, EmpCode,Salary)
+        VALUES (_Name, _EmpCode, _Salary);
+		
+        SET _EmpID = LAST_INSERT_ID;
+	ELSE
+		UPDATE Employee
+        SET
+        NAME = _Name,
+        EmpCode = _EmpCode,
+        Salary = _Salary
+        WHERE EmpID = _EmpID;
+	END IF;
+    
+    SELECT _EMPID AS 'EmpID';
+END
