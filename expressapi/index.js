@@ -14,6 +14,7 @@ const app = express();
 // Init middleware
 app.use(logger);
 
+//Using Cors
 app.use(cors());
 
 // Body Parser Middleware
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 // app.get('/',(req,res)=>{
 //     res.sendFile(path.join(__dirname,'public','index.html'));
 // });
+
 app.use(express.static(path.join(__dirname,'public')));
 
 // Routes
@@ -36,21 +38,13 @@ app.get('/',(req,res)=>{
 });
 
 // API Routes
-//Mount Routes
-
 
 //Relationship
 // Post.belongsTo(User);
 // User.hasMany(Post);
 
 
-// Members
-// app.use('/api/members', require('./routes/members'));
-
-// Employee
-// app.use('/api/employees', require('./routes/employees'));
-
-
+// Send response when is error
 app.use((req, res, next) => {
     next(createError(404, 'Page Not Found'));
   });

@@ -1,8 +1,8 @@
 import connection from '../createConnection';
 import createError from '../utils/createError';
 
-export const getAllEmployees = (req, res, next) => {
-    var sql = `SELECT * FROM Employee Order By  ${req.params.name} Asc`;
+export const getAllLists = (req, res, next) => {
+    var sql = `SELECT * FROM Products`;
   connection.query(
     sql,
     (error, data) => {
@@ -18,9 +18,9 @@ export const getAllEmployees = (req, res, next) => {
   );
 };
 
-export const getEmployeeByID = (req, res, next) => {
+export const getByID = (req, res, next) => {
   connection.query(
-    `SELECT * FROM Employee WHERE EmpID=${req.params.id}`,
+    `SELECT * FROM Products WHERE id=${req.params.id}`,
     (error, data) => {
       if (error) {
         next(error);
@@ -34,12 +34,13 @@ export const getEmployeeByID = (req, res, next) => {
   );
 };
 
-export const createEmployee = (req, res, next) => {
-    let emp = req.body;
+export const create = (req, res, next) => {
+    let prod = req.body;
   connection.query(
-    `INSERT INTO Employee 
-    (Name, EmpCode, Salary) 
-    VALUES ('${emp.Name}', '${emp.EmpCode}', '${emp.Salary}')`,
+    `INSERT INTO Products 
+    (name,disease,manufacturer,SKU,description,mfd,exp,updatedAt) 
+    VALUES ('${prod.name}', '${prod.disease}', '${prod.manufacturer}','${prod.SKU}','${prod.description}',
+        '${prod.mfd}','${prod.exp}','${prod.updatedAt}')`,
     (error, data) => {
       if (error) {
         next(error);
@@ -50,7 +51,7 @@ export const createEmployee = (req, res, next) => {
           payload: {
             id: data.insertId,
             user_id: req.authenticatedUserID,
-            Employee: req.body.Employee,
+            Product: req.body.Product,
             description: req.body.description,
             deadline: req.body.deadline,
             completed: false,
@@ -61,7 +62,7 @@ export const createEmployee = (req, res, next) => {
   );
 };
 
-export const updateEmployee = (req, res, next) => {
+export const update = (req, res, next) => {
   let values = '';
   Object.keys(req.body).forEach((key) => {
     values += `${key} = '${req.body[key]}', `;
@@ -69,9 +70,9 @@ export const updateEmployee = (req, res, next) => {
 
   values = values.slice(0, values.length - 2);
   const query = `
-    UPDATE Employee
+    UPDATE Products
     SET ${values}
-    WHERE EmpID=${req.params.id}
+    WHERE id=${req.params.id}
     `;
 
   connection.query(query, (error, data) => {
@@ -80,7 +81,7 @@ export const updateEmployee = (req, res, next) => {
     } else {
       if (data.affectedRows) {
         connection.query(
-          `SELECT * FROM Employee WHERE EmpID=${req.params.id}`,
+          `SELECT * FROM Products WHERE id=${req.params.id}`,
           (error, data) => {
             if (error) {
               next(error);
@@ -99,9 +100,9 @@ export const updateEmployee = (req, res, next) => {
   });
 };
 
-export const deleteEmployee = (req, res, next) => {
+export const remove = (req, res, next) => {
   connection.query(
-    `DELETE FROM Employee WHERE EmpID=${req.params.id}`,
+    `DELETE FROM Products WHERE id=${req.params.id}`,
     (error, data) => {
       if (error) {
         next(error);
