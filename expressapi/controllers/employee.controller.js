@@ -2,7 +2,7 @@ import connection from '../createConnection';
 import createError from '../utils/createError';
 
 export const getAllEmployees = (req, res, next) => {
-    var sql = `SELECT * FROM Employee Order By  ${req.params.name} Asc`;
+    var sql = `SELECT * FROM Employee`;
   connection.query(
     sql,
     (error, data) => {

@@ -1,0 +1,174 @@
+openapi: 3.0.0
+info:
+  description: "This is a api documentation for the Medical App"
+  version: "1.0.0"
+  title: Swagger Medical app
+  contact:
+    name: "Hazesoft"
+    email: "anunay@hazesoft.co"
+servers:
+  - url: http://localhost:5000/api
+    description: Development Server
+tags:
+- name: User
+  description: Everything about User
+- name: Product
+  description: Everything about Product
+- name: Cart
+  description: Everything about carts
+- name: Order
+  description: Everything about orders
+paths:
+  /products:
+    get:
+      tags:
+      - "Product"
+      summary: Get list of all products
+      description: Get list of all products
+      responses:
+        200:
+          description: Successfully get products
+        500:
+            description: Error while geting products
+    post:
+     tags:
+      - "Product"
+     summary: create product
+     description: create a product
+     requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              $ref: '#/components/schemas/Product'
+     responses:
+      200:
+       description: Product created succesfully
+      500:
+       description: failure in creating product
+  /products/{id}:
+    get:
+      tags:
+      - "Product"
+      summary: get single product
+      description: get a single product with id passed as parameter
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: id of the product
+        example: 2
+      responses:
+       200:
+        description: success
+    put:
+     tags:
+      - "Product"
+     summary: update product
+     description: update a product
+     parameters:
+      - in: path
+        name: id
+        schema:
+         type: integer
+        required: true
+        description: id of the product
+        example: 2
+     requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              $ref: '#/components/schemas/Product'
+     responses:
+      200:
+       description: Product updated succesfully
+      500:
+       description: failure in updating product
+      400:
+       description: Invalid product supplied
+      404:
+       description: Product not found
+   
+components:
+  securitySchemes:
+    oAuth:    # <---- arbitrary name
+      type: oauth2
+      description: This API uses OAuth 2 with the implicit grant flow.
+      flows:
+        implicit:   # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
+          authorizationUrl: https://api.example.com/oauth2/authorize
+          scopes:
+            read_carts: read carts
+            write_carts: modify carts
+  schemas:
+    User:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        username:
+          type: "string"
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+        phone:
+          type: "string"
+        userStatus:
+          type: "integer"
+          format: "int32"
+          description: "User Status"
+    Product:
+      type: object
+      properties:
+        name:
+          type: string
+          description: name of the employee
+          example: 'Flexon'
+        disease:
+          type: string
+          description: disease type
+          example: 'Fever'
+        manufacturer:
+          type: string
+          description: name of the manufacturer
+          example: 'SK Prod'
+        SKU:
+          type: string
+          description: stock keeping unit
+          example: 'dle78sd'
+        price:
+          type: integer
+          description: price of the product
+          example: 290
+        description:
+          type: string
+          description: short description of the products
+          example: 'This medicine is used for fever.'
+        mfd:
+          type: string
+          format: date-time
+          description: date of manufacture
+          example: 2020-10-11
+        exp:
+          type: string
+          format: date-time
+          description: date of expiration
+          example: 2021-10-11
+        updatedAt:
+          type: string
+          format: date-time
+          description: date of product update
+          example: 2021-05-11
+
+

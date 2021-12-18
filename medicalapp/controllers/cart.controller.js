@@ -1,8 +1,12 @@
 import connection from '../createConnection';
 import createError from '../utils/createError';
 
-export const getAllLists = (req, res, next) => {
-    var sql = `SELECT * FROM Products`;
+export const getMyCart = (req, res, next) => {
+    var sql = `SELECT carts.id,carts.quantity, products.name as productName, products.price as price 
+        FROM carts 
+        JOIN products ON carts.id = products.id 
+        WHERE userId=${req.authenticatedUserID}`;
+        console.log(sql);
   connection.query(
     sql,
     (error, data) => {
@@ -18,45 +22,18 @@ export const getAllLists = (req, res, next) => {
   );
 };
 
-export const getByID = (req, res, next) => {
-  connection.query(
-    `SELECT * FROM Products WHERE id=${req.params.id}`,
-    (error, data) => {
-      if (error) {
-        next(error);
-      } else {
-        res.json({
-          status: 'Success',
-          payload: data,
-        });
-      }
-    }
-  );
-};
-
 export const create = (req, res, next) => {
-    let prod = req.body;
+    let cart = req.body;
     console.log(req.file);
   connection.query(
-    `INSERT INTO Products 
-    (name,disease,manufacturer,SKU,price,productImage,description,mfd,exp,updatedAt) 
-    VALUES ('${prod.name}', '${prod.disease}', '${prod.manufacturer}','${prod.SKU}','${prod.price}','${req.file.filename}','${prod.description}',
-        '${prod.mfd}','${prod.exp}','${prod.updatedAt}')`,
+    `INSERT INTO carts (productId,quantity,userId) VALUES (${cart.productId},${cart.quantity}, ${req.authenticatedUserID})`,
     (error, data) => {
       if (error) {
         next(error);
       } else {
         console.log(data);
         res.status(201).send({
-          status: 'Success',
-          payload: {
-            id: data.insertId,
-            user_id: req.authenticatedUserID,
-            Product: req.body.Product,
-            description: req.body.description,
-            deadline: req.body.deadline,
-            completed: false,
-          },
+          status: 'Successfully added to your cart',
         });
       }
     }
@@ -71,7 +48,7 @@ export const update = (req, res, next) => {
 
   values = values.slice(0, values.length - 2);
   const query = `
-    UPDATE Products
+    UPDATE carts
     SET ${values}
     WHERE id=${req.params.id}
     `;
@@ -82,7 +59,7 @@ export const update = (req, res, next) => {
     } else {
       if (data.affectedRows) {
         connection.query(
-          `SELECT * FROM Products WHERE id=${req.params.id}`,
+          `SELECT * FROM carts WHERE id=${req.params.id}`,
           (error, data) => {
             if (error) {
               next(error);
@@ -95,7 +72,7 @@ export const update = (req, res, next) => {
           }
         );
       } else {
-        next(createError(404, 'Item Not Found'));
+        next(createError(404, 'Cart Item Not Found'));
       }
     }
   });
@@ -103,7 +80,7 @@ export const update = (req, res, next) => {
 
 export const remove = (req, res, next) => {
   connection.query(
-    `DELETE FROM Products WHERE id=${req.params.id}`,
+    `DELETE FROM carts WHERE id=${req.params.id}`,
     (error, data) => {
       if (error) {
         next(error);
@@ -116,7 +93,7 @@ export const remove = (req, res, next) => {
             },
           });
         } else {
-          next(createError(404, 'Item not found'));
+          next(createError(404, 'Cart Item not found'));
         }
       }
     }

@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
@@ -19,6 +20,8 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "mysql": "^2.18.1",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
